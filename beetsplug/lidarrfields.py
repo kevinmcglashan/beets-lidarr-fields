@@ -22,9 +22,11 @@ class LidarrFieldsPlugin(BeetsPlugin):
       return None
     
     if item.mb_releasegroupid != self.mb_releasegroupid:
-      rel = musicbrainzngs.get_release_group_by_id(item.mb_releasegroupid, ['artist-credits'])
-      self.releasegroupartist = rel['release-group']['artist-credit'][0]['artist']['name']
-      self.mb_releasegroupid = item.mb_releasegroupid
+      self.releasegroupartist = item.albumartist
+      if len(item.mb_releasegroupid) > 0:
+        rel = musicbrainzngs.get_release_group_by_id(item.mb_releasegroupid, ['artist-credits'])
+        self.releasegroupartist = rel['release-group']['artist-credit'][0]['artist']['name']
+        self.mb_releasegroupid = item.mb_releasegroupid
     
     return self.releasegroupartist
   
