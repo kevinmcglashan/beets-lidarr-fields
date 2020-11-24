@@ -20,12 +20,17 @@ class LidarrFieldsPlugin(BeetsPlugin):
   def _tmpl_releasegroupartist(self, item):
     if item.singleton:
       return None
+      
+    if len(item.mb_releasegroupid) == 0:
+      return item.albumartist
     
     if item.mb_releasegroupid != self.mb_releasegroupid:
-      self.releasegroupartist = item.albumartist
-      if len(item.mb_releasegroupid) > 0:
+      try:
         rel = musicbrainzngs.get_release_group_by_id(item.mb_releasegroupid, ['artist-credits'])
         self.releasegroupartist = rel['release-group']['artist-credit'][0]['artist']['name']
+      except:
+        self.releasegroupartist = item.albumartist
+      finally:
         self.mb_releasegroupid = item.mb_releasegroupid
     
     return self.releasegroupartist
